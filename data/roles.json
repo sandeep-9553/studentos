@@ -1,0 +1,42 @@
+{
+  "DevOps Engineer": [
+    {"skill": "Linux", "resource": "Linux Journey (free website)", "project": "Set up and manage a Linux server", "hours": 8},
+    {"skill": "Networking", "resource": "Computer networking basics on YouTube", "project": "Design a simple subnet layout", "hours": 6},
+    {"skill": "Git", "resource": "Git official docs (Pro Git book)", "project": "Push a project to GitHub with branches", "hours": 4},
+    {"skill": "Docker", "resource": "Docker official docs", "project": "Containerize a Flask app", "hours": 8},
+    {"skill": "CI/CD", "resource": "GitHub Actions docs", "project": "Build an auto-deploy pipeline", "hours": 8},
+    {"skill": "Terraform", "resource": "HashiCorp Terraform tutorials", "project": "Provision an EC2 instance with code", "hours": 8}
+  ],
+  "Data Analyst": [
+    {"skill": "Excel", "resource": "Any free Excel course on YouTube", "project": "Clean and summarize a sales sheet", "hours": 6},
+    {"skill": "SQL", "resource": "SQLBolt (free)", "project": "Query a sample database", "hours": 8},
+    {"skill": "Python", "resource": "Python basics for beginners", "project": "Write scripts that clean data", "hours": 10},
+    {"skill": "Pandas", "resource": "Pandas official getting-started guide", "project": "Analyze a CSV dataset", "hours": 8},
+    {"skill": "Data Visualization", "resource": "Plotly or Matplotlib docs", "project": "Build a charts dashboard", "hours": 6},
+    {"skill": "Statistics", "resource": "Khan Academy statistics", "project": "Write a short analysis report", "hours": 8}
+  ],
+  "Full Stack Developer": [
+    {"skill": "HTML/CSS", "resource": "MDN Web Docs", "project": "Build a personal portfolio page", "hours": 8},
+    {"skill": "JavaScript", "resource": "javascript.info", "project": "Make a to-do list app", "hours": 12},
+    {"skill": "Git", "resource": "Git official docs (Pro Git book)", "project": "Push a project to GitHub", "hours": 4},
+    {"skill": "React", "resource": "React official tutorial", "project": "Build a weather app", "hours": 12},
+    {"skill": "Node.js", "resource": "Node.js official guides", "project": "Create a REST API", "hours": 10},
+    {"skill": "SQL", "resource": "SQLBolt (free)", "project": "Connect an app to a database", "hours": 8}
+  ],
+  "AI/ML Engineer": [
+    {"skill": "Python", "resource": "Python basics for beginners", "project": "Write small practice programs", "hours": 10},
+    {"skill": "Math for ML", "resource": "Khan Academy linear algebra and statistics", "project": "Implement a simple calculation by hand", "hours": 10},
+    {"skill": "Pandas", "resource": "Pandas official getting-started guide", "project": "Clean a real dataset", "hours": 8},
+    {"skill": "Machine Learning", "resource": "scikit-learn tutorials", "project": "Predict house prices", "hours": 12},
+    {"skill": "Deep Learning", "resource": "Free deep learning course (fast.ai)", "project": "Image classifier", "hours": 14},
+    {"skill": "Model Deployment", "resource": "Streamlit docs", "project": "Deploy a model as a web app", "hours": 8}
+  ],
+  "Cloud Engineer": [
+    {"skill": "Linux", "resource": "Linux Journey (free website)", "project": "Set up and manage a Linux server", "hours": 8},
+    {"skill": "Networking", "resource": "Computer networking basics on YouTube", "project": "Design a VPC with subnets", "hours": 6},
+    {"skill": "AWS", "resource": "AWS Skill Builder (free tier courses)", "project": "Launch an EC2 instance and an S3 bucket", "hours": 12},
+    {"skill": "Security Basics", "resource": "AWS IAM documentation", "project": "Set up users and permissions", "hours": 6},
+    {"skill": "Docker", "resource": "Docker official docs", "project": "Containerize an app", "hours": 8},
+    {"skill": "Cloud Deployment", "resource": "AWS or Azure free tier guides", "project": "Host a website in the cloud", "hours": 10}
+  ]
+}
