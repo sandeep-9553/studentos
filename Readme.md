@@ -5,7 +5,7 @@ StudentOS is an all-in-one productivity web application designed to help college
 ## Live Demo
 
 Try the live application here:  
-[https://studentos-qvkcbfutwrmnvxvtrktvk9.streamlit.app](https://studentos-qvkcbfutwrmnvxvtrktvk9.streamlit.app)
+https://studentos-sandeep.streamlit.app/
 
 ## Problem Statement
 
