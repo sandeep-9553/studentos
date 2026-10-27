@@ -3,7 +3,12 @@ import pandas as pd
 import plotly.express as px
 from datetime import date
 from core.db import get_conn
+from core.auth import require_login
 from core.categorizer import categorize
+from core.ui import navbar
+
+user_id = require_login()
+navbar()  
 
 st.title("💰 Expense Organizer")
 conn = get_conn()
@@ -21,8 +26,8 @@ amount = c3.number_input("Amount (₹)", min_value=0.0, step=10.0)
 if st.button("Add expense"):
     if desc.strip() and amount > 0:
         conn.execute(
-            "INSERT INTO expenses(date, description, amount, category) VALUES (?,?,?,?)",
-            (str(exp_date), desc, amount, categorize(desc)),
+            "INSERT INTO expenses(user_id, date, description, amount, category) VALUES (?,?,?,?,?)",
+            (user_id, str(exp_date), desc, amount, categorize(desc)),
         )
         conn.commit()
         st.success("Expense added")
@@ -36,20 +41,25 @@ if b1.button("Load sample data"):
     sample = pd.read_csv("data/sample_expenses.csv")
     for _, row in sample.iterrows():
         conn.execute(
-            "INSERT INTO expenses(date, description, amount, category) VALUES (?,?,?,?)",
-            (row["date"], row["description"], row["amount"], categorize(row["description"])),
+            "INSERT INTO expenses(user_id, date, description, amount, category) VALUES (?,?,?,?,?)",
+            (user_id, row["date"], row["description"], row["amount"],
+             categorize(row["description"])),
         )
     conn.commit()
     st.success("Sample data loaded")
 
 if b2.button("Clear all expenses"):
-    conn.execute("DELETE FROM expenses")
+    conn.execute("DELETE FROM expenses WHERE user_id=?", (user_id,))
     conn.commit()
     st.rerun()
 
 # ---------- Show all expenses ----------
 st.subheader("Your expenses")
-df = pd.read_sql("SELECT * FROM expenses ORDER BY date DESC", conn)
+df = pd.read_sql(
+    "SELECT id, date, description, amount, category FROM expenses "
+    "WHERE user_id=? ORDER BY date DESC",
+    conn, params=(user_id,),
+)
 
 if df.empty:
     st.info("No expenses yet. Add one above or click 'Load sample data'.")
@@ -66,8 +76,8 @@ else:
 
     if st.button("Save category changes"):
         for _, row in edited.iterrows():
-            conn.execute("UPDATE expenses SET category=? WHERE id=?",
-                         (row["category"], int(row["id"])))
+            conn.execute("UPDATE expenses SET category=? WHERE id=? AND user_id=?",
+                         (row["category"], int(row["id"]), user_id))
         conn.commit()
         st.success("Categories saved")
         st.rerun()

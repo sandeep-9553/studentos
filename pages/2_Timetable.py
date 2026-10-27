@@ -2,7 +2,12 @@ import streamlit as st
 import pandas as pd
 from datetime import date, timedelta
 from core.db import get_conn
+from core.auth import require_login
 from core.scheduler import make_schedule
+from core.ui import navbar
+
+user_id = require_login()
+navbar()  
 
 st.title("📅 Smart Timetable Planner")
 conn = get_conn()
@@ -18,7 +23,7 @@ hours = c4.number_input("Hours needed", min_value=0.5, value=4.0, step=0.5)
 if st.button("Add task"):
     name = subject.strip()
     exists = conn.execute(
-        "SELECT 1 FROM tasks WHERE subject=? AND done=0", (name,)
+        "SELECT 1 FROM tasks WHERE subject=? AND done=0 AND user_id=?", (name, user_id)
     ).fetchone()
     if not name:
         st.warning("Enter a subject name")
@@ -26,8 +31,8 @@ if st.button("Add task"):
         st.warning("A pending task with this name already exists. Use a different name.")
     else:
         conn.execute(
-            "INSERT INTO tasks(subject, deadline, priority, hours_needed) VALUES (?,?,?,?)",
-            (name, str(deadline), priority, hours),
+            "INSERT INTO tasks(user_id, subject, deadline, priority, hours_needed) VALUES (?,?,?,?,?)",
+            (user_id, name, str(deadline), priority, hours),
         )
         conn.commit()
         st.success("Task added")
@@ -46,20 +51,24 @@ if b1.button("Load sample tasks"):
     ]
     for s, d, p, h in samples:
         conn.execute(
-            "INSERT INTO tasks(subject, deadline, priority, hours_needed) VALUES (?,?,?,?)",
-            (s, str(d), p, h),
+            "INSERT INTO tasks(user_id, subject, deadline, priority, hours_needed) VALUES (?,?,?,?,?)",
+            (user_id, s, str(d), p, h),
         )
     conn.commit()
     st.rerun()
 
 if b2.button("Clear all tasks"):
-    conn.execute("DELETE FROM tasks")
+    conn.execute("DELETE FROM tasks WHERE user_id=?", (user_id,))
     conn.commit()
     st.rerun()
 
 # ---------- Task list ----------
 st.subheader("Your tasks")
-df = pd.read_sql("SELECT * FROM tasks ORDER BY deadline", conn)
+df = pd.read_sql(
+    "SELECT id, subject, deadline, priority, hours_needed, done FROM tasks "
+    "WHERE user_id=? ORDER BY deadline",
+    conn, params=(user_id,),
+)
 
 if df.empty:
     st.info("No tasks yet. Add one above or click 'Load sample tasks'.")
@@ -77,8 +86,8 @@ edited = st.data_editor(
 
 if st.button("Save progress"):
     for _, row in edited.iterrows():
-        conn.execute("UPDATE tasks SET done=? WHERE id=?",
-                     (int(row["done"]), int(row["id"])))
+        conn.execute("UPDATE tasks SET done=? WHERE id=? AND user_id=?",
+                     (int(row["done"]), int(row["id"]), user_id))
     conn.commit()
     st.success("Progress saved")
     st.rerun()
@@ -106,7 +115,6 @@ for _, r in pending.iterrows():
         "hours_needed": r["hours_needed"],
     })
 
-# warn about deadlines that already passed
 for t in tasks:
     if t["deadline"] < date.today():
         st.error(f"⚠️ The deadline for {t['subject']} has already passed.")
